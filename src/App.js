@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import React from "react";
 import logo from "./logo.svg";
 import { css, jsx } from "@emotion/core";
 
