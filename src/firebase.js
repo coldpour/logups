@@ -1,5 +1,6 @@
 import * as firebase from "firebase/app";
 import "firebase/analytics";
+import "firebase/auth";
 
 const app = firebase.initializeApp({
   apiKey: "AIzaSyCLBTItBH-_kUm4zBWsCtNQvmmePJa3kLw",
@@ -11,7 +12,5 @@ const app = firebase.initializeApp({
   appId: "1:551311844214:web:7f1e53ac3454f7c2d61057",
   measurementId: "G-HM57NVP9BZ",
 });
-
-firebase.analytics();
 
 export default app;
