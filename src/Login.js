@@ -18,23 +18,27 @@ export default () => {
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-      let emailForSignIn = window.localStorage.getItem("emailForSignIn");
-      if (!emailForSignIn) {
-        emailForSignIn = window.prompt(
-          "Please provide your email fro confirmation"
-        );
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+        let emailForSignIn = window.localStorage.getItem("emailForSignIn");
+        if (!emailForSignIn) {
+          emailForSignIn = window.prompt(
+            "Please provide your email fro confirmation"
+          );
+        }
+        firebase
+          .auth()
+          .signInWithEmailLink(emailForSignIn, window.location.href)
+          .then((result) => {
+            window.localStorage.removeItem("emailForSignIn");
+            const { user } = result;
+            setUser(user);
+          })
+          .catch(setError);
       }
-      firebase
-        .auth()
-        .signInWithEmailLink(emailForSignIn, window.location.href)
-        .then((result) => {
-          window.localStorage.removeItem("emailForSignIn");
-          const { user } = result;
-          setUser(user);
-        })
-        .catch(setError);
-    }
+    });
   }, [setUser]);
 
   return (
