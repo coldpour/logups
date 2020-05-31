@@ -75,7 +75,9 @@ export default () => {
               timestamp: new Date(),
             })
             .catch(setError)
-            .finally(setLoading(false));
+            .finally(() => {
+              setLoading(false);
+            });
         }}
         css={css`
           font-size: 20px;
