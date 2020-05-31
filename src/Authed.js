@@ -123,12 +123,21 @@ export default () => {
         <div>
           <h1>reps:</h1>
           <ul>
-            {Object.entries(sets).map(([id, { count, timestamp }]) => (
-              <li key={id}>
-                <ul>
-                  <li>{count}</li>
-                  <li>{timestamp.toDate().toLocaleString()}</li>
-                </ul>
+            {Object.entries(
+              Object.entries(sets).reduce(
+                (grouped, [id, { count, timestamp }]) => {
+                  const dateString = timestamp.toDate().toDateString();
+                  const sum = grouped[dateString];
+                  return {
+                    ...grouped,
+                    [dateString]: sum ? sum + count : count,
+                  };
+                },
+                {}
+              )
+            ).map(([date, total]) => (
+              <li key={date}>
+                {date} - {total}
               </li>
             ))}
           </ul>
