@@ -7,7 +7,7 @@ import UserContext from "./UserContext";
 const actionCodeSettings = {
   // URL you want to redirect back to. The domain (www.example.com) for this
   // URL must be whitelisted in the Firebase Console.
-  url: "http://localhost:3000",
+  url: window.location.href,
   // This must be true.
   handleCodeInApp: true,
 };
@@ -15,6 +15,7 @@ const actionCodeSettings = {
 export default () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default () => {
         let emailForSignIn = window.localStorage.getItem("emailForSignIn");
         if (!emailForSignIn) {
           emailForSignIn = window.prompt(
-            "Please provide your email fro confirmation"
+            "Please provide your email for confirmation"
           );
         }
         firebase
@@ -45,9 +46,11 @@ export default () => {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        const { target } = e;
-        const email = target.elements.email.value;
         setLoading(true);
+        const { target } = e;
+        const field = target.elements.email;
+        const email = field.value;
+        field.value = "";
         firebase
           .auth()
           .sendSignInLinkToEmail(email, actionCodeSettings)
@@ -55,7 +58,10 @@ export default () => {
             window.localStorage.setItem("emailForSignIn", email);
           })
           .catch(setError)
-          .finally(setLoading(false));
+          .finally(() => {
+            setLoading(false);
+            setSent(true);
+          });
       }}
       css={css`
         font-size: 20px;
@@ -89,6 +95,7 @@ export default () => {
           {JSON.stringify(error, null, 2)}
         </pre>
       )}
+      {sent && <div> check your inbox! </div>}
     </form>
   );
 };
