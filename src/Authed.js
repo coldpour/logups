@@ -74,7 +74,6 @@ export default () => {
               user: user.uid,
               timestamp: new Date(),
             })
-            .then((doc) => setReps((prev) => ({ ...prev, [doc.id]: doc })))
             .catch(setError)
             .finally(setLoading(false));
         }}
@@ -121,7 +120,7 @@ export default () => {
               <li key={id}>
                 <ul>
                   <li>{count}</li>
-                  <li>{JSON.stringify(timestamp, null, 2)}</li>
+                  <li>{timestamp.toDate().toLocaleString()}</li>
                 </ul>
               </li>
             ))}
