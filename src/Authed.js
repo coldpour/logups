@@ -8,7 +8,7 @@ import UserContext from "./UserContext";
 export default () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [reps, setReps] = useState(null);
+  const [sets, setSets] = useState(null);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -16,11 +16,11 @@ export default () => {
       .where("user", "==", user.uid)
       .limit(50)
       .onSnapshot((snapshot) => {
-        if (!snapshot.size) setReps(null);
+        if (!snapshot.size) setSets(null);
         else {
-          setReps(
+          setSets(
             snapshot.docs.reduce(
-              (nextReps, doc) => ({ ...nextReps, [doc.id]: doc.data() }),
+              (next, doc) => ({ ...next, [doc.id]: doc.data() }),
               {}
             )
           );
@@ -112,11 +112,11 @@ export default () => {
           </pre>
         )}
       </form>
-      {reps && (
+      {sets && (
         <div>
           <h1>reps:</h1>
           <ul>
-            {Object.entries(reps).map(([id, { count, timestamp }]) => (
+            {Object.entries(sets).map(([id, { count, timestamp }]) => (
               <li key={id}>
                 <ul>
                   <li>{count}</li>
