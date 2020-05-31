@@ -66,8 +66,13 @@ export default () => {
         onSubmit={(e) => {
           e.preventDefault();
           setLoading(true);
-          const { target } = e;
-          const count = parseInt(target.elements.reps.value, 10);
+          const {
+            target: {
+              elements: { reps },
+            },
+          } = e;
+          const count = parseInt(reps.value, 10);
+          reps.value = "";
           db.collection("reps")
             .add({
               count,
