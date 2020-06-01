@@ -2,13 +2,23 @@
 import { css, jsx } from "@emotion/core";
 import { useContext } from "react";
 import SetsContext from "./SetsContext";
+import { getDay } from "./location";
 
 export default () => {
-  const { search } = window.location;
   const { setsByDay } = useContext(SetsContext);
-  return (
-    <pre>
-      {JSON.stringify(search)} {JSON.stringify(setsByDay, null, 2)}
-    </pre>
-  );
+  const today = getDay();
+  const { sets: todaysSets, total } = setsByDay ? setsByDay[today] : {};
+
+  return todaysSets ? (
+    <ul>
+      <h1>
+        {today} - {total}
+      </h1>
+      {todaysSets.map(({ id, count, timestamp }) => (
+        <li key={id}>
+          {timestamp.toDate().toLocaleTimeString()} - {count}
+        </li>
+      ))}
+    </ul>
+  ) : null;
 };
