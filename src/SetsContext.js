@@ -37,10 +37,13 @@ export const SetsProvider = (props) => {
     Object.entries(sets).reduce((grouped, [id, { count, timestamp }]) => {
       const dateString = formatAsId(timestamp.toDate());
 
-      const sum = grouped[dateString];
+      const nextEntry = { id, count, timestamp };
+      const entry = grouped[dateString];
+      const total = entry ? entry.total + count : count;
+      const sets = entry ? [...entry.sets, nextEntry] : [nextEntry];
       return {
         ...grouped,
-        [dateString]: sum ? sum + count : count,
+        [dateString]: { total, sets },
       };
     }, {});
 

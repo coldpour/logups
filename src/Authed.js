@@ -4,13 +4,14 @@ import Logo from "./Logo";
 import Sets from "./Sets";
 import RepForm from "./RepForm";
 import { SetsProvider } from "./SetsContext";
+import SetsForDay from "./SetsForDay";
 
 export default () => {
   const { search } = window.location;
   return (
     <SetsProvider>
       {search ? (
-        <pre>{JSON.stringify(search)}</pre>
+        <SetsForDay />
       ) : (
         <header
           css={css`

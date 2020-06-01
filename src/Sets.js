@@ -10,7 +10,7 @@ export default () => {
   return (
     setsByDay && (
       <ul>
-        {Object.entries(setsByDay).map(([date, total]) => (
+        {Object.entries(setsByDay).map(([date, { total }]) => (
           <li key={date}>
             <a
               href={filterByDay(date)}
