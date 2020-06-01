@@ -1,44 +1,16 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useState, useEffect, useContext } from "react";
-import UserContext from "./UserContext";
-import { db } from "./firebase";
+import { useContext } from "react";
 import { filterByDay } from "./location";
+import SetsContext from "./SetsContext";
 
 export default () => {
-  const [sets, setSets] = useState(null);
-  const { user } = useContext(UserContext);
-
-  useEffect(() => {
-    db.collection("reps")
-      .where("user", "==", user.uid)
-      .limit(50)
-      .onSnapshot((snapshot) => {
-        if (!snapshot.size) setSets(null);
-        else {
-          setSets(
-            snapshot.docs.reduce(
-              (next, doc) => ({ ...next, [doc.id]: doc.data() }),
-              {}
-            )
-          );
-        }
-      });
-  }, [user.uid]);
+  const { setsByDay } = useContext(SetsContext);
 
   return (
-    sets && (
+    setsByDay && (
       <ul>
-        {Object.entries(
-          Object.entries(sets).reduce((grouped, [id, { count, timestamp }]) => {
-            const dateString = timestamp.toDate().toDateString();
-            const sum = grouped[dateString];
-            return {
-              ...grouped,
-              [dateString]: sum ? sum + count : count,
-            };
-          }, {})
-        ).map(([date, total]) => (
+        {Object.entries(setsByDay).map(([date, total]) => (
           <li key={date}>
             <a
               href={filterByDay(date)}
