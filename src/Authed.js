@@ -5,7 +5,10 @@ import Sets from "./Sets";
 import RepForm from "./RepForm";
 
 export default () => {
-  return (
+  const { search } = window.location;
+  return search ? (
+    <pre>{JSON.stringify(search)}</pre>
+  ) : (
     <header
       css={css`
         background-color: #282c34;

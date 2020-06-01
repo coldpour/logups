@@ -1,8 +1,9 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
+import { css, jsx } from "@emotion/core";
 import { useState, useEffect, useContext } from "react";
 import UserContext from "./UserContext";
 import { db } from "./firebase";
+import { filterByDay } from "./location";
 
 export default () => {
   const [sets, setSets] = useState(null);
@@ -39,7 +40,15 @@ export default () => {
           }, {})
         ).map(([date, total]) => (
           <li key={date}>
-            {date} - {total}
+            <a
+              href={filterByDay(date)}
+              css={css`
+                color: white;
+                text-decoration: none;
+              `}
+            >
+              {date} - {total}
+            </a>
           </li>
         ))}
       </ul>
