@@ -10,16 +10,16 @@ export default () => {
   return (
     setsByDay && (
       <ul>
-        {Object.entries(setsByDay).map(([date, { total }]) => (
-          <li key={date}>
+        {Object.entries(setsByDay).map(([key, { displayDate, total }]) => (
+          <li key={key}>
             <a
-              href={filterByDay(date)}
+              href={filterByDay(key)}
               css={css`
                 color: white;
                 text-decoration: none;
               `}
             >
-              {date} - {total}
+              {displayDate} - {total}
             </a>
           </li>
         ))}

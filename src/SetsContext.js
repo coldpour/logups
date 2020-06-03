@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { db } from "./firebase";
 import UserContext from "./UserContext";
 import createUseSelector from "./createUseSelector";
-import { formatAsId } from "./date";
+import { formatAsId, formatDayOfWeekMonthDay } from "./date";
 
 const SetsContext = createContext();
 
@@ -35,15 +35,17 @@ export const SetsProvider = (props) => {
   const setsByDay =
     sets &&
     Object.entries(sets).reduce((grouped, [id, { count, timestamp }]) => {
-      const dateString = formatAsId(timestamp.toDate());
+      const date = timestamp.toDate();
+      const key = formatAsId(date);
 
       const nextEntry = { id, count, timestamp };
-      const entry = grouped[dateString];
+      const entry = grouped[key];
       const total = entry ? entry.total + count : count;
       const sets = entry ? [...entry.sets, nextEntry] : [nextEntry];
+      const displayDate = formatDayOfWeekMonthDay(date);
       return {
         ...grouped,
-        [dateString]: { total, sets },
+        [key]: { total, displayDate, sets },
       };
     }, {});
 
