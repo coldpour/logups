@@ -5,6 +5,7 @@ import DailyTotals from "./DailyTotals";
 import RepForm from "./RepForm";
 import { SetsProvider } from "./SetsContext";
 import SetsForDay from "./SetsForDay";
+import Aggregations from "./Aggregations";
 
 export default () => {
   const { search } = window.location;
@@ -25,6 +26,7 @@ export default () => {
             color: white;
           `}
         >
+          <Aggregations />
           <Logo />
           <RepForm />
           <DailyTotals />
