@@ -18,6 +18,7 @@ export const SetsProvider = (props) => {
   useEffect(() => {
     db.collection("reps")
       .where("user", "==", user.uid)
+      .orderBy("timestamp", "desc")
       .limit(50)
       .onSnapshot((snapshot) => {
         if (!snapshot.size) setSets(null);
