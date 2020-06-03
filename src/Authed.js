@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
 import Logo from "./Logo";
-import Sets from "./Sets";
+import DailyTotals from "./DailyTotals";
 import RepForm from "./RepForm";
 import { SetsProvider } from "./SetsContext";
 import SetsForDay from "./SetsForDay";
@@ -27,7 +27,7 @@ export default () => {
         >
           <Logo />
           <RepForm />
-          <Sets />
+          <DailyTotals />
         </header>
       )}
     </SetsProvider>
