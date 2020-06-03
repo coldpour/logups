@@ -3,6 +3,7 @@ import { db } from "./firebase";
 import UserContext from "./UserContext";
 import createUseSelector from "./createUseSelector";
 import { formatAsId, formatDayOfWeekMonthDay } from "./date";
+import { month } from "./date.js";
 
 const SetsContext = createContext();
 
@@ -50,5 +51,18 @@ export const SetsProvider = (props) => {
       };
     }, {});
 
-  return <SetsContext.Provider value={{ sets, setsByDay }} {...props} />;
+  const runningTotal =
+    sets &&
+    Object.entries(sets).reduce((total, [id, { count, timestamp }]) => {
+      const recordMonth = month(timestamp.toDate());
+      const currentMonth = month(new Date());
+      return total + (recordMonth === currentMonth ? count : 0);
+    }, 0);
+
+  return (
+    <SetsContext.Provider
+      value={{ sets, setsByDay, runningTotal }}
+      {...props}
+    />
+  );
 };

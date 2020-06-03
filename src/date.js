@@ -5,6 +5,24 @@ export const day = (date) => date.getDate();
 export const paddedDay = (date) => String(day(date)).padStart(2, 0);
 export const dayOfWeek = (date) =>
   ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()];
+export const monthWord = (date) =>
+  [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "October",
+    "November",
+    "December",
+  ][date.getMonth()];
+export const daysInMonth = (date) =>
+  [31, year(date) % 4 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][
+    date.getMonth()
+  ];
 
 export const formatAsId = (date) => {
   return `${year(date)}${paddedMonth(date)}${paddedDay(date)}`;
