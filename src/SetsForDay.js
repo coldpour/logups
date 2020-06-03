@@ -4,11 +4,17 @@ import { useContext } from "react";
 import SetsContext from "./SetsContext";
 import { getDay } from "./location";
 import Set from "./Set";
+import { asc } from "./sort";
+
+const byTimestamp = ({ timestamp: a }, { timestamp: b }) =>
+  asc(a.toDate(), b.toDate());
 
 export default () => {
   const { setsByDay } = useContext(SetsContext);
   const today = getDay();
-  const { sets: todaysSets, total } = setsByDay ? setsByDay[today] : {};
+  const { sets: todaysSets, total, displayDate } = setsByDay
+    ? setsByDay[today]
+    : {};
 
   return todaysSets ? (
     <div
@@ -19,7 +25,7 @@ export default () => {
       `}
     >
       <h1>
-        {today} - {total}
+        {displayDate} - {total}
       </h1>
       <ul
         css={css`
@@ -27,7 +33,7 @@ export default () => {
           width: 100%;
         `}
       >
-        {todaysSets.map(({ id }) => (
+        {todaysSets.sort(byTimestamp).map(({ id }) => (
           <Set key={id} id={id} />
         ))}
       </ul>
