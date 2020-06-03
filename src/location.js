@@ -8,3 +8,8 @@ export const getDay = () => {
   const params = new URLSearchParams(window.location.search);
   return params.get("d");
 };
+
+export const hasDay = () => {
+  const params = new URLSearchParams(window.location.search);
+  return params.has("d");
+};

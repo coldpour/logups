@@ -6,12 +6,12 @@ import RepForm from "./RepForm";
 import { SetsProvider } from "./SetsContext";
 import SetsForDay from "./SetsForDay";
 import Aggregations from "./Aggregations";
+import { hasDay } from "./location";
 
 export default () => {
-  const { search } = window.location;
   return (
     <SetsProvider>
-      {search ? (
+      {hasDay() ? (
         <SetsForDay />
       ) : (
         <header
