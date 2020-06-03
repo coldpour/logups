@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { filterByDay } from "./location";
 import SetsContext from "./SetsContext";
 import { desc } from "./sort";
+import UL from "./UL";
 
 const byKey = ([a], [b]) => desc(a, b);
 
@@ -12,23 +13,40 @@ export default () => {
 
   return (
     setsByDay && (
-      <ul>
+      <UL>
         {Object.entries(setsByDay)
           .sort(byKey)
           .map(([key, { displayDate, total }]) => (
-            <li key={key}>
+            <li
+              key={key}
+              css={css`
+                display: flex;
+                justify-content: center;
+              `}
+            >
               <a
                 href={filterByDay(key)}
                 css={css`
                   color: white;
                   text-decoration: none;
+                  display: flex;
+                  flex: 1;
+                  padding: 0.5em;
+                  max-width: 125px;
                 `}
               >
-                {displayDate} - {total}
+                <div
+                  css={css`
+                    flex: 1;
+                  `}
+                >
+                  {displayDate}
+                </div>
+                <div>{total}</div>
               </a>
             </li>
           ))}
-      </ul>
+      </UL>
     )
   );
 };

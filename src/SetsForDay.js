@@ -5,6 +5,7 @@ import SetsContext from "./SetsContext";
 import { getDay } from "./location";
 import Set from "./Set";
 import { asc } from "./sort";
+import UL from "./UL";
 
 const byTimestamp = ({ timestamp: a }, { timestamp: b }) =>
   asc(a.toDate(), b.toDate());
@@ -27,16 +28,11 @@ export default () => {
       <h1>
         {displayDate} - {total}
       </h1>
-      <ul
-        css={css`
-          padding-left: 0;
-          width: 100%;
-        `}
-      >
+      <UL>
         {todaysSets.sort(byTimestamp).map(({ id }) => (
           <Set key={id} id={id} />
         ))}
-      </ul>
+      </UL>
     </div>
   ) : null;
 };
