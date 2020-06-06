@@ -40,7 +40,7 @@ export default () => {
           .catch(setError);
       }
     });
-  }, [setUser]);
+  }, []);
 
   return (
     <form

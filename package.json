@@ -14,10 +14,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "lint": "prettier -c .",
+    "build": "prettier -c . && react-scripts build",
     "test": "react-scripts test",
-    "ci": "yarn lint && yarn test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
