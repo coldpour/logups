@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx} from "@emotion/core";
+import { jsx } from "@emotion/core";
 import { useState } from "react";
 import UserContext from "./UserContext";
 import Login from "./Login";
