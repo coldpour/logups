@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "babel-plugin-emotion": "^10.0.33",
+    "firebase-tools": "^8.4.2",
     "prettier": "2.0.5"
   }
 }
