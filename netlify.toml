@@ -3,5 +3,5 @@
   command = "yarn test && yarn build"
 
 [build.environment]
-  CI = true
+  CI = "true"
   FIRESTORE_EMULATOR_HOST = "localhost:8080"
