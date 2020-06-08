@@ -1,6 +1,6 @@
 [build]
   publish = "build/"
-  command = "yarn test && yarn build"
+  command = "env | grep EMULATOR && env | grep CI && exit 1"
 
 [build.environment]
   FIRESTORE_EMULATOR_HOST = "localhost:8080"
