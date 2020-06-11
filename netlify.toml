@@ -3,7 +3,6 @@
   command = "yarn build"
 
 [build.environment]
-  FIRESTORE_EMULATOR_HOST = "0.0.0.0:8080"
   CI = "true"
 
 [[plugins]]
