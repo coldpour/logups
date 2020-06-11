@@ -1,0 +1,15 @@
+[build]
+  publish = "build/"
+  command = "yarn build"
+
+[build.environment]
+  CI = "true"
+
+[[plugins]]
+  package = "/plugins/netlify-plugin-prettier"
+
+[[plugins]]
+  package = "/plugins/netlify-plugin-firebase-cache"
+
+[[plugins]]
+  package = "/plugins/netlify-plugin-unit-test"
