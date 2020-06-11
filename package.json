@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "prettier -c . && react-scripts build",
+    "build": "react-scripts build",
     "test": "yarn test:rules && yarn test:web",
     "test:web": "react-scripts test",
     "test:rules": "yarn emulate & sleep 10; yarn kill:firebase",
