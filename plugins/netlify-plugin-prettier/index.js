@@ -1,6 +1,14 @@
 module.exports = {
-  onPreBuild: async ({ utils: { run } }) => {
-    console.log("Checking code style with Prettier.js");
-    await run.command("prettier -c .");
+  onPreBuild: async ({
+    utils: {
+      run,
+      build: { failBuild },
+    },
+  }) => {
+    try {
+      await run.command("prettier -c .");
+    } catch (error) {
+      failBuild();
+    }
   },
 };
