@@ -16,8 +16,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "yarn test:rules && yarn test:web",
-    "test:web": "react-scripts test",
+    "test": "react-scripts test",
     "test:rules": "yarn emulate & sleep 10; yarn kill:firebase",
     "kill:firebase": "ps aux | grep firebase | grep -v grep | awk '{print $2}' | xargs kill",
     "eject": "react-scripts eject",

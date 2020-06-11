@@ -1,6 +1,6 @@
 [build]
   publish = "build/"
-  command = "yarn test && yarn build"
+  command = "yarn build"
 
 [build.environment]
   FIRESTORE_EMULATOR_HOST = "0.0.0.0:8080"
@@ -8,6 +8,9 @@
 
 [[plugins]]
   package = "/plugins/netlify-plugin-prettier"
+
+[[plugins]]
+  package = "/plugins/netlify-plugin-unit-test"
 
 [[plugins]]
   package = "netlify-plugin-firebase-cache"
