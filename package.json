@@ -16,9 +16,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:rules": "yarn emulate & sleep 10; yarn kill:firebase",
-    "kill:firebase": "ps aux | grep firebase | grep -v grep | awk '{print $2}' | xargs kill",
+    "test": "yarn test:rules",
+    "test:web": "react-scripts test",
+    "test:rules": "firebase emulators:exec --only firestore 'jest ./test'",
     "eject": "react-scripts eject",
     "emulate": "firebase emulators:start --only firestore"
   },
