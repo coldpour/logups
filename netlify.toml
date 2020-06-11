@@ -9,7 +9,7 @@
   package = "/plugins/netlify-plugin-prettier"
 
 [[plugins]]
-  package = "/plugins/netlify-plugin-unit-test"
+  package = "netlify-plugin-firebase-cache"
 
 [[plugins]]
-  package = "netlify-plugin-firebase-cache"
+  package = "/plugins/netlify-plugin-unit-test"
