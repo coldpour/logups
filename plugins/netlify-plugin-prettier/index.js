@@ -1,14 +1,5 @@
 module.exports = {
-  onPreBuild: async ({
-    utils: {
-      run,
-      build: { failBuild },
-    },
-  }) => {
-    try {
-      await run.command("prettier -c .");
-    } catch (error) {
-      failBuild();
-    }
+  onPreBuild: async ({ utils: { run } }) => {
+    await run.command("prettier -c .");
   },
 };
