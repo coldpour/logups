@@ -16,7 +16,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "yarn test:rules",
+    "test": "yarn test:web && yarn test:rules",
     "test:web": "react-scripts test",
     "test:rules": "firebase emulators:exec --only firestore 'jest ./test'",
     "eject": "react-scripts eject",
