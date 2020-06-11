@@ -18,7 +18,7 @@
     "build": "prettier -c . && react-scripts build",
     "test": "yarn test:rules && yarn test:web",
     "test:web": "react-scripts test",
-    "test:rules": "yarn emulate & jest ./test.js; yarn kill:firebase",
+    "test:rules": "yarn emulate & sleep 10; yarn kill:firebase",
     "kill:firebase": "ps aux | grep firebase | grep -v grep | awk '{print $2}' | xargs kill",
     "eject": "react-scripts eject",
     "emulate": "firebase emulators:start --only firestore"
