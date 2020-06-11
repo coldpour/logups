@@ -8,4 +8,6 @@
 
 [[plugins]]
   package = "/plugins/netlify-plugin-prettier"
+
+[[plugins]]
   package = "netlify-plugin-firebase-cache"
