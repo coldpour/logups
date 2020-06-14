@@ -53,35 +53,18 @@ describe("when logged in as alice", () => {
     await firebase.assertSucceeds(reps.add(validAliceReps));
   });
 
-  test("alice cannot create reps for other users", async () => {
-    await firebase.assertFails(reps.add({ ...validAliceReps, user: bob.uid }));
-  });
-
-  test("alice cannot create reps with a negative count", async () => {
-    await firebase.assertFails(reps.add({ ...validAliceReps, count: -20 }));
-  });
-
-  test("alice cannot create reps with a string count", async () => {
-    await firebase.assertFails(reps.add({ ...validAliceReps, count: "1" }));
-  });
-
-  test("alice cannot create reps without a count", async () => {
-    await firebase.assertFails(
-      reps.add({ user: alice.uid, timestamp: new Date() })
-    );
-  });
-
-  test("alice cannot create reps without a timestamp", async () => {
-    await firebase.assertFails(reps.add({ user: alice.uid, count: 1 }));
-  });
-
-  test("alice cannot create reps with a string timestamp", async () => {
-    await firebase.assertFails(
-      reps.add({ ...validAliceReps, timestamp: "123" })
-    );
-  });
-
-  test("alice cannot create reps with a number timestamp", async () => {
-    await firebase.assertFails(reps.add({ ...validAliceReps, timestamp: 123 }));
+  [
+    ["for no user", ({ count, timestamp }) => ({ count, timestamp })],
+    ["for other users", (o) => ({ ...o, user: bob.uid })],
+    ["with a negative count", (o) => ({ ...o, count: -20 })],
+    ["with a string count", (o) => ({ ...o, count: "1" })],
+    ["without a count", ({ user, timestamp }) => ({ user, timestamp })],
+    ["without timestamp", ({ user, count }) => ({ user, count })],
+    ["with a string timestamp", (o) => ({ ...o, timestamp: "123" })],
+    ["with a number timestamp", (o) => ({ ...o, timestamp: 123 })],
+  ].forEach(([desc, argFn]) => {
+    const arg = argFn(validAliceReps);
+    test(`alice cannot create reps ${desc}: ${JSON.stringify(arg)}`, async () =>
+      await firebase.assertFails(reps.add(arg)));
   });
 });
