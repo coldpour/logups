@@ -49,8 +49,18 @@ describe("when logged in as alice", () => {
     .firestore();
   const reps = db.collection("reps");
 
-  test("alice can create reps for herself", async () => {
+  test("alice can CRUD reps for herself", async () => {
     await firebase.assertSucceeds(reps.add(validAliceReps));
+    const snapshot = await reps.where("user", "==", alice.uid).get();
+    const docs = snapshot.docs;
+    expect(docs.length).toBeGreaterThan(0);
+    const { id } = docs[0];
+    const { count } = docs[0].data();
+    const newCount = count * 2;
+    await firebase.assertSucceeds(reps.doc(id).update({ count: newCount }));
+    const updatedDoc = await reps.doc(id).get();
+    expect(updatedDoc.data().count).toEqual(newCount);
+    await firebase.assertSucceeds(reps.doc(id).delete());
   });
 
   [
