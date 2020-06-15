@@ -7,6 +7,25 @@ const projectId = "coldpour-test-project";
 const alice = { uid: "alice", email: "alice@example.com" };
 const bob = { uid: "bob", email: "bob@example.com" };
 
+const badData = [
+  ["for no user", ({ count, timestamp }) => ({ count, timestamp })],
+  ["without a count", ({ user, timestamp }) => ({ user, timestamp })],
+  ["with a negative count", (o) => ({ ...o, count: -20 })],
+  ["with a string count", (o) => ({ ...o, count: "1" })],
+  ["with a bool count", (o) => ({ ...o, count: true })],
+  ["with an object count", (o) => ({ ...o, count: { a: 1 } })],
+  ["with an array count", (o) => ({ ...o, count: [1] })],
+  ["without timestamp", ({ user, count }) => ({ user, count })],
+  ["with a string timestamp", (o) => ({ ...o, timestamp: "123" })],
+  ["with a number timestamp", (o) => ({ ...o, timestamp: 123 })],
+  ["with a bool timestamp", (o) => ({ ...o, timestamp: true })],
+  ["with an array timestamp", (o) => ({ ...o, timestamp: [1] })],
+  [
+    "with an object timestamp",
+    (o) => ({ ...o, timestamp: { milis: 123, nanos: 293487 } }),
+  ],
+];
+
 const validAliceReps = {
   count: 20,
   user: alice.uid,
@@ -20,6 +39,7 @@ const validBobReps = {
 };
 
 const bobsFirstReps = "bobsFirst";
+const alicesFirstReps = "alicesFirst";
 
 beforeAll(async () => {
   const rulesContent = fs.readFileSync(
@@ -37,6 +57,7 @@ beforeAll(async () => {
     .firestore()
     .collection("reps");
   await adminReps.doc(bobsFirstReps).set(validBobReps);
+  await adminReps.doc(alicesFirstReps).set(validAliceReps);
 });
 
 afterAll(() => {
@@ -44,14 +65,29 @@ afterAll(() => {
 });
 
 describe("when not logged in", () => {
-  const db = firebase
+  const unauthedReps = firebase
     .initializeTestApp({
       projectId,
     })
-    .firestore();
+    .firestore()
+    .collection("reps");
 
-  test("reps cannot be created", async () => {
-    await firebase.assertFails(db.collection("reps").add(validAliceReps));
+  test("cannot create reps", async () => {
+    await firebase.assertFails(unauthedReps.add(validAliceReps));
+  });
+
+  test("cannot read bob's existing reps", async () => {
+    await firebase.assertFails(unauthedReps.doc(bobsFirstReps).get());
+  });
+
+  test("cannot update bob's existing reps", async () => {
+    await firebase.assertFails(
+      unauthedReps.doc(bobsFirstReps).set(validAliceReps)
+    );
+  });
+
+  test("cannot delete bob's existing reps", async () => {
+    await firebase.assertFails(unauthedReps.doc(bobsFirstReps).delete());
   });
 });
 
@@ -95,22 +131,39 @@ describe("when logged in as alice", () => {
     await firebase.assertSucceeds(aliceReps.doc(id).delete());
   });
 
-  test("alice cannot read bob's existing reps", async () => {
-    await firebase.assertFails(aliceReps.doc(bobsFirstReps).get());
+  describe("alice cannot CRUD for bob", () => {
+    test("create", async () => {
+      await firebase.assertFails(aliceReps.add(validBobReps));
+    });
+
+    test("read", async () => {
+      await firebase.assertFails(aliceReps.doc(bobsFirstReps).get());
+    });
+
+    test("update", async () => {
+      await firebase.assertFails(
+        aliceReps.doc(bobsFirstReps).set(validBobReps)
+      );
+    });
+
+    test("delete", async () => {
+      await firebase.assertFails(aliceReps.doc(bobsFirstReps).delete());
+    });
   });
 
-  [
-    ["for no user", ({ count, timestamp }) => ({ count, timestamp })],
-    ["for other users", (o) => ({ ...o, user: bob.uid })],
-    ["with a negative count", (o) => ({ ...o, count: -20 })],
-    ["with a string count", (o) => ({ ...o, count: "1" })],
-    ["without a count", ({ user, timestamp }) => ({ user, timestamp })],
-    ["without timestamp", ({ user, count }) => ({ user, count })],
-    ["with a string timestamp", (o) => ({ ...o, timestamp: "123" })],
-    ["with a number timestamp", (o) => ({ ...o, timestamp: 123 })],
-  ].forEach(([desc, argFn]) => {
-    const arg = argFn(validAliceReps);
-    test(`alice cannot create reps ${desc}: ${JSON.stringify(arg)}`, async () =>
-      await firebase.assertFails(aliceReps.add(arg)));
+  describe("alice cannot create reps with bum data", () => {
+    badData.forEach(([desc, argFn]) => {
+      const arg = argFn(validAliceReps);
+      test(`${desc}: ${JSON.stringify(arg)}`, async () =>
+        await firebase.assertFails(aliceReps.add(arg)));
+    });
+  });
+
+  describe("alice cannot update reps with whack data", () => {
+    badData.forEach(([desc, argFn]) => {
+      const arg = argFn(validAliceReps);
+      test(`${desc}: ${JSON.stringify(arg)}`, async () =>
+        await firebase.assertFails(aliceReps.doc(alicesFirstReps).set(arg)));
+    });
   });
 });
