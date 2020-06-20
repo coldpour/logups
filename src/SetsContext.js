@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { db } from "./firebase";
-import UserContext from "./UserContext";
+import { useUser } from "./UserContext";
 import createUseSelector from "./createUseSelector";
 import { formatAsId, formatDayOfWeekMonthDay } from "./date";
 import { month } from "./date.js";
@@ -10,15 +10,13 @@ const SetsContext = createContext();
 export const useSelector = createUseSelector(SetsContext);
 export const selectSets = ({ sets }) => sets;
 
-export default SetsContext;
-
 export const SetsProvider = (props) => {
   const [sets, setSets] = useState(null);
-  const { user } = useContext(UserContext);
+  const { uid } = useUser();
 
   useEffect(() => {
     db.collection("reps")
-      .where("user", "==", user.uid)
+      .where("user", "==", uid)
       .orderBy("timestamp", "desc")
       .limit(50)
       .onSnapshot((snapshot) => {
@@ -32,7 +30,7 @@ export const SetsProvider = (props) => {
           );
         }
       });
-  }, [user.uid]);
+  }, [uid]);
 
   const setsByDay =
     sets &&
@@ -66,3 +64,5 @@ export const SetsProvider = (props) => {
     />
   );
 };
+
+export const useSets = () => useContext(SetsContext);

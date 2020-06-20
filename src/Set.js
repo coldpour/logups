@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { db } from "./firebase";
-import SetsContext from "./SetsContext";
+import { useSets } from "./SetsContext";
 
 export default ({ id }) => {
-  const { sets } = useContext(SetsContext);
+  const { sets } = useSets();
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const { timestamp, count } = sets[id];

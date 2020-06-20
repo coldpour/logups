@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { db } from "./firebase";
-import UserContext from "./UserContext";
+import { useUser } from "./UserContext";
 
 export default () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useContext(UserContext);
+  const user = useUser();
+
   return (
     <form
       onSubmit={(e) => {

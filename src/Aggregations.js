@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useContext } from "react";
-import SetsContext from "./SetsContext";
+import { useSets } from "./SetsContext";
 import { monthWord, day, daysInMonth } from "./date";
 
 const TR = (props) => <tr css={css``} {...props} />;
@@ -35,7 +34,7 @@ const ValueTD = (props) => (
 );
 
 export default () => {
-  const { runningTotal } = useContext(SetsContext);
+  const { runningTotal } = useSets();
   const today = new Date();
   const currentMonth = monthWord(today);
   const avg = Math.round(runningTotal / day(today));

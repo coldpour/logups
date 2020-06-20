@@ -1,15 +1,14 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useContext } from "react";
 import { filterByDay } from "./location";
-import SetsContext from "./SetsContext";
+import { useSets } from "./SetsContext";
 import { desc } from "./sort";
 import UL from "./UL";
 
 const byKey = ([a], [b]) => desc(a, b);
 
 export default () => {
-  const { setsByDay } = useContext(SetsContext);
+  const { setsByDay } = useSets();
 
   return (
     setsByDay && (

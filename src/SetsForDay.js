@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useContext } from "react";
-import SetsContext from "./SetsContext";
+import { useSets } from "./SetsContext";
 import { getDay } from "./location";
 import Set from "./Set";
 import { asc } from "./sort";
@@ -11,7 +10,7 @@ const byTimestamp = ({ timestamp: a }, { timestamp: b }) =>
   asc(a.toDate(), b.toDate());
 
 export default () => {
-  const { setsByDay } = useContext(SetsContext);
+  const { setsByDay } = useSets();
   const today = getDay();
   const { sets: todaysSets, total, displayDate } = setsByDay
     ? setsByDay[today]
