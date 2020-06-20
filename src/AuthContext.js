@@ -18,9 +18,11 @@ const AuthProvider = (props) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
     firebase.auth().onAuthStateChanged((fbUser) => {
       if (fbUser) {
         setUser(fbUser);
+        setLoading(false);
       } else if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
         let emailForSignIn = window.localStorage.getItem("emailForSignIn");
         if (!emailForSignIn) {
@@ -28,7 +30,6 @@ const AuthProvider = (props) => {
             "Please provide your email for confirmation"
           );
         }
-        setLoading(true);
         firebase
           .auth()
           .signInWithEmailLink(emailForSignIn, window.location.href)
