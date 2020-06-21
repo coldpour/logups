@@ -1,8 +1,32 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
 import { useState } from "react";
+import { Button, TextField, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { db } from "./firebase";
 import { useUser } from "./UserContext";
+
+const useStylesRadiusField = makeStyles(() => ({
+  root: {
+    "border-top-right-radius": 0,
+    "border-bottom-right-radius": 0,
+  },
+}));
+
+const RadiusField = ({ InputProps, ...rest }) => {
+  const classes = useStylesRadiusField();
+  return <TextField InputProps={{ classes, ...InputProps }} {...rest} />;
+};
+
+const RadiusButton = (props) => (
+  <Button
+    css={css`
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    `}
+    {...props}
+  />
+);
 
 export default () => {
   const [error, setError] = useState(null);
@@ -36,36 +60,33 @@ export default () => {
         font-size: 20px;
       `}
     >
-      <label>
-        <div>reps</div>
-        <input
+      <div
+        css={css`
+          display: flex;
+        `}
+      >
+        <RadiusField
+          id="log-reps"
+          label="reps"
           name="reps"
-          css={css`
-            font-size: 20px;
-          `}
           type="number"
           min="1"
           step="1"
+          disabled={loading}
+          required
+          variant="outlined"
+          error={error}
+          helperText={error && error.message}
         />
-      </label>
-      <button
-        css={css`
-          font-size: 20px;
-        `}
-        type="submit"
-        disabled={loading}
-      >
-        log
-      </button>
-      {error && (
-        <pre
-          css={css`
-            color: red;
-          `}
+        <RadiusButton
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading}
         >
-          {JSON.stringify(error, null, 2)}
-        </pre>
-      )}
+          log
+        </RadiusButton>
+      </div>
     </form>
   );
 };
