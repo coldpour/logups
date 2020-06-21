@@ -41,13 +41,12 @@ export default () => {
             `}
           />
           <Typography
-            variant="body1"
             css={css`
               padding: 0 2em;
             `}
           >
             We sent an email to you at{" "}
-            <Typography variant="body1" color="textSecondary" component="span">
+            <Typography color="textSecondary" component="span">
               {sent}
             </Typography>
             . It has a magic link that'll sign you in.
@@ -74,7 +73,6 @@ export default () => {
           `}
         >
           <Typography
-            variant="body1"
             css={css`
               padding: 0 2em;
             `}
