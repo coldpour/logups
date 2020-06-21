@@ -57,9 +57,6 @@ export default () => {
             setLoading(false);
           });
       }}
-      css={css`
-        font-size: 20px;
-      `}
     >
       <div
         css={css`
