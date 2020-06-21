@@ -32,6 +32,7 @@ export default () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const user = useUser();
+  const errorMessage = error && error.message;
 
   return (
     <form
@@ -70,13 +71,14 @@ export default () => {
           label="reps"
           name="reps"
           type="number"
-          min="1"
-          step="1"
           disabled={loading}
           required
           variant="outlined"
-          error={error}
-          helperText={error && error.message}
+          error={!!error}
+          inputProps={{
+            min: "1",
+            step: "1",
+          }}
         />
         <RadiusButton
           type="submit"
@@ -87,6 +89,16 @@ export default () => {
           log
         </RadiusButton>
       </div>
+      {errorMessage && (
+        <Typography
+          variant="caption"
+          color="error"
+          display="block"
+          align="center"
+        >
+          {errorMessage}
+        </Typography>
+      )}
     </form>
   );
 };
