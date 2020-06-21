@@ -45,12 +45,14 @@ export default () => {
           },
         } = e;
         const count = parseInt(reps.value, 10);
-        reps.value = "";
         db.collection("reps")
           .add({
             count,
             user: user.uid,
             timestamp: new Date(),
+          })
+          .then(() => {
+            reps.value = "";
           })
           .catch(setError)
           .finally(() => {

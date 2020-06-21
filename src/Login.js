@@ -60,9 +60,12 @@ export default () => {
             const { target } = e;
             const field = target.elements.email;
             const email = field.value;
-            field.value = "";
+
             login(email)
-              .then(() => setSent(email))
+              .then(() => {
+                field.value = "";
+                setSent(email);
+              })
               .catch(setError)
               .finally(() => setLoading(false));
           }}
