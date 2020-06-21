@@ -84,7 +84,7 @@ export default () => {
             label="email"
             name="email"
             required
-            error={error}
+            error={!!error}
             helperText={error && error.message}
             fullWidth
           />
