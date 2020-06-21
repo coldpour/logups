@@ -1,17 +1,22 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import { Typography } from "@material-ui/core";
 import { useSets } from "./SetsContext";
 import { monthWord, day, daysInMonth } from "./date";
 
 const TR = (props) => <tr css={css``} {...props} />;
 
-const TD = (props) => (
+const Text = (props) => <Typography component="span" {...props} />;
+
+const TD = ({ children, ...rest }) => (
   <td
     css={css`
       padding: 0.5em;
     `}
-    {...props}
-  />
+    {...rest}
+  >
+    <Text>{children}</Text>
+  </td>
 );
 
 const LabelTD = (props) => (
