@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import { Button, Typography } from "@material-ui/core";
 import { filterByDay } from "./location";
 import { useSets } from "./SetsContext";
 import { desc } from "./sort";
@@ -21,28 +22,22 @@ export default () => {
               css={css`
                 display: flex;
                 justify-content: center;
+                padding: 0.25em 0;
               `}
             >
-              <a
+              <Button
                 href={filterByDay(key)}
                 css={css`
-                  color: white;
-                  text-decoration: none;
                   display: flex;
                   flex: 1;
-                  padding: 0.5em;
-                  max-width: 125px;
+                  text-transform: none;
+                  justify-content: space-between;
+                  max-width: 200px;
                 `}
               >
-                <div
-                  css={css`
-                    flex: 1;
-                  `}
-                >
-                  {displayDate}
-                </div>
-                <div>{total}</div>
-              </a>
+                <Typography>{displayDate}</Typography>
+                <Typography>{total}</Typography>
+              </Button>
             </li>
           ))}
       </UL>
