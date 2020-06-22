@@ -5,6 +5,8 @@ import { filterByDay } from "./location";
 import { useSets } from "./SetsContext";
 import { desc } from "./sort";
 import UL from "./UL";
+import LI from "./LI";
+import Container from "./Container";
 
 const byKey = ([a], [b]) => desc(a, b);
 
@@ -17,28 +19,18 @@ export default () => {
         {Object.entries(setsByDay)
           .sort(byKey)
           .map(([key, { displayDate, total }]) => (
-            <li
-              key={key}
-              css={css`
-                display: flex;
-                justify-content: center;
-                padding: 0.25em 0;
-              `}
-            >
-              <Button
+            <LI key={key}>
+              <Container
+                component={Button}
                 href={filterByDay(key)}
                 css={css`
-                  display: flex;
-                  flex: 1;
                   text-transform: none;
-                  justify-content: space-between;
-                  max-width: 200px;
                 `}
               >
                 <Typography>{displayDate}</Typography>
                 <Typography>{total}</Typography>
-              </Button>
-            </li>
+              </Container>
+            </LI>
           ))}
       </UL>
     )

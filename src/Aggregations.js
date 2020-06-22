@@ -1,30 +1,16 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+import { jsx } from "@emotion/core";
 import { Typography } from "@material-ui/core";
 import { useSets } from "./SetsContext";
 import { monthWord, day, daysInMonth } from "./date";
 import UL from "./UL";
+import CommonLI from "./LI";
+import Container from "./Container";
 
 const LI = ({ children, ...rest }) => (
-  <li
-    css={css`
-      padding: 0.25em 0;
-      display: flex;
-      justify-content: center;
-    `}
-  >
-    <div
-      css={css`
-        display: flex;
-        flex: 1;
-        justify-content: space-between;
-        max-width: 200px;
-        padding: 0.25em;
-      `}
-    >
-      {children}
-    </div>
-  </li>
+  <CommonLI {...rest}>
+    <Container>{children}</Container>
+  </CommonLI>
 );
 
 const Label = (props) => <Typography {...props} />;
