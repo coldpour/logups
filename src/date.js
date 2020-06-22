@@ -31,3 +31,7 @@ export const formatAsId = (date) => {
 export const formatDayOfWeekMonthDay = (date) => {
   return `${dayOfWeek(date)}, ${month(date)}/${day(date)}`;
 };
+
+export const firstDayOfMonth = (date) => {
+  return new Date(year(date), date.getMonth(), 1);
+};

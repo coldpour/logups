@@ -1,42 +1,69 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useState, useContext } from "react";
+import { useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  IconButton as MIconButton,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import { Delete, Check, Close } from "@material-ui/icons";
 import { db } from "./firebase";
-import SetsContext from "./SetsContext";
+import { useSets } from "./SetsContext";
+import Container from "./Container";
+import LI from "./LI";
+
+const IconButton = ({ disableElevation, fullWidth, ...props }) => (
+  <MIconButton
+    css={css`
+      padding: 10px;
+      min-width: auto;
+    `}
+    {...props}
+  />
+);
+
+const ResetButton = (props) => (
+  <IconButton type="reset" {...props}>
+    <Close />
+  </IconButton>
+);
+
+const SubmitButton = ({ color, ...props }) => (
+  <IconButton color="primary" type="submit" {...props}>
+    <Check />
+  </IconButton>
+);
+
+const Timestamp = ({ value }) => (
+  <Typography
+    css={css`
+      flex: 0 0 auto;
+    `}
+  >
+    {value.toDate().toLocaleTimeString()}
+  </Typography>
+);
 
 export default ({ id }) => {
-  const { sets } = useContext(SetsContext);
+  const { sets } = useSets();
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const { timestamp, count } = sets[id];
 
   return (
-    <li
+    <LI
       css={css`
-        display: flex;
-        justify-content: space-evenly;
-        padding: 0.5em;
+        height: 70px;
       `}
     >
       {editing ? (
-        <button
-          disabled={loading}
-          onClick={() => {
-            setLoading(true);
-            db.collection("reps")
-              .doc(id)
-              .delete()
-              .catch((err) => {
-                setLoading(false);
-              });
-          }}
-        >
-          X
-        </button>
-      ) : null}
-      <div>{timestamp.toDate().toLocaleTimeString()}</div>
-      {editing ? (
-        <form
+        <Container
+          component="form"
+          css={css`
+            position: relative;
+          `}
           onSubmit={(e) => {
             e.preventDefault();
             setLoading(true);
@@ -49,23 +76,61 @@ export default ({ id }) => {
               });
           }}
         >
-          <label>
-            <div>reps</div>
-            <input
-              name="reps"
-              defaultValue={count}
-              min="1"
-              step="1"
-              type="number"
-            />
-          </label>
-          <button disabled={loading} type="submit">
-            OK
-          </button>
-        </form>
+          <IconButton
+            disabled={loading}
+            color="secondary"
+            css={css`
+              position: absolute;
+              right: 100%;
+            `}
+            onClick={() => {
+              setLoading(true);
+              db.collection("reps")
+                .doc(id)
+                .delete()
+                .finally(() => setLoading(false));
+            }}
+          >
+            <Delete />
+          </IconButton>
+          <Timestamp value={timestamp} />
+
+          <TextField
+            css={css`
+              max-width: 90px;
+            `}
+            id={`reps-${id}`}
+            name="reps"
+            defaultValue={count}
+            label="reps"
+            type="number"
+            variant="outlined"
+            disabled={loading}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              min: "1",
+              step: "1",
+              style: { textAlign: "right" },
+            }}
+          />
+          <ButtonGroup
+            css={css`
+              position: absolute;
+              left: 100%;
+            `}
+          >
+            <SubmitButton disabled={loading} />
+            <ResetButton disabled={loading} />
+          </ButtonGroup>
+        </Container>
       ) : (
-        <button onClick={() => setEditing(true)}>{count}</button>
+        <Container component={Button} onClick={() => setEditing(true)}>
+          <Timestamp value={timestamp} />
+          <Typography>{count}</Typography>
+        </Container>
       )}
-    </li>
+    </LI>
   );
 };

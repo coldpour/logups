@@ -1,61 +1,41 @@
 /** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import { useContext } from "react";
-import SetsContext from "./SetsContext";
+import { jsx } from "@emotion/core";
+import { Typography } from "@material-ui/core";
+import { useSets } from "./SetsContext";
 import { monthWord, day, daysInMonth } from "./date";
+import UL from "./UL";
+import CommonLI from "./LI";
+import Container from "./Container";
 
-const TR = (props) => <tr css={css``} {...props} />;
-
-const TD = (props) => (
-  <td
-    css={css`
-      padding: 0.5em;
-    `}
-    {...props}
-  />
+const LI = ({ children, ...rest }) => (
+  <CommonLI {...rest}>
+    <Container>{children}</Container>
+  </CommonLI>
 );
 
-const LabelTD = (props) => (
-  <TD
-    css={css`
-      min-width: 150px;
-      box-sizing: border-box;
-    `}
-    {...props}
-  />
-);
-
-const ValueTD = (props) => (
-  <TD
-    css={css`
-      text-align: right;
-    `}
-    {...props}
-  />
-);
+const Label = (props) => <Typography {...props} />;
+const Value = (props) => <Typography {...props} />;
 
 export default () => {
-  const { runningTotal } = useContext(SetsContext);
+  const { runningTotal } = useSets();
   const today = new Date();
   const currentMonth = monthWord(today);
   const avg = Math.round(runningTotal / day(today));
   const projection = avg * daysInMonth(today);
   return (
-    <table>
-      <tbody>
-        <TR>
-          <LabelTD>{currentMonth} Total</LabelTD>
-          <ValueTD>{runningTotal}</ValueTD>
-        </TR>
-        <TR>
-          <LabelTD>Daily Average</LabelTD>
-          <ValueTD>{avg}</ValueTD>
-        </TR>
-        <TR>
-          <LabelTD>Projection</LabelTD>
-          <ValueTD>{projection}</ValueTD>
-        </TR>
-      </tbody>
-    </table>
+    <UL>
+      <LI>
+        <Label>{currentMonth} Total</Label>
+        <Value>{runningTotal}</Value>
+      </LI>
+      <LI>
+        <Label>Daily Average</Label>
+        <Value>{avg}</Value>
+      </LI>
+      <LI>
+        <Label>Projection</Label>
+        <Value>{projection}</Value>
+      </LI>
+    </UL>
   );
 };

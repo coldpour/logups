@@ -1,15 +1,17 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import { useContext } from "react";
+import { Button, Typography } from "@material-ui/core";
 import { filterByDay } from "./location";
-import SetsContext from "./SetsContext";
+import { useSets } from "./SetsContext";
 import { desc } from "./sort";
 import UL from "./UL";
+import LI from "./LI";
+import Container from "./Container";
 
 const byKey = ([a], [b]) => desc(a, b);
 
 export default () => {
-  const { setsByDay } = useContext(SetsContext);
+  const { setsByDay } = useSets();
 
   return (
     setsByDay && (
@@ -17,34 +19,18 @@ export default () => {
         {Object.entries(setsByDay)
           .sort(byKey)
           .map(([key, { displayDate, total }]) => (
-            <li
-              key={key}
-              css={css`
-                display: flex;
-                justify-content: center;
-              `}
-            >
-              <a
+            <LI key={key}>
+              <Container
+                component={Button}
                 href={filterByDay(key)}
                 css={css`
-                  color: white;
-                  text-decoration: none;
-                  display: flex;
-                  flex: 1;
-                  padding: 0.5em;
-                  max-width: 125px;
+                  text-transform: none;
                 `}
               >
-                <div
-                  css={css`
-                    flex: 1;
-                  `}
-                >
-                  {displayDate}
-                </div>
-                <div>{total}</div>
-              </a>
-            </li>
+                <Typography>{displayDate}</Typography>
+                <Typography>{total}</Typography>
+              </Container>
+            </LI>
           ))}
       </UL>
     )

@@ -1,13 +1,39 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import { useState, useContext } from "react";
+import { useState } from "react";
+import { Button, TextField, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { db } from "./firebase";
-import UserContext from "./UserContext";
+import { useUser } from "./UserContext";
+
+const useStylesRadiusField = makeStyles(() => ({
+  root: {
+    "border-top-right-radius": 0,
+    "border-bottom-right-radius": 0,
+  },
+}));
+
+const RadiusField = ({ InputProps, ...rest }) => {
+  const classes = useStylesRadiusField();
+  return <TextField InputProps={{ classes, ...InputProps }} {...rest} />;
+};
+
+const RadiusButton = (props) => (
+  <Button
+    css={css`
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    `}
+    {...props}
+  />
+);
 
 export default () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useContext(UserContext);
+  const user = useUser();
+  const errorMessage = error && error.message;
+
   return (
     <form
       onSubmit={(e) => {
@@ -19,51 +45,59 @@ export default () => {
           },
         } = e;
         const count = parseInt(reps.value, 10);
-        reps.value = "";
         db.collection("reps")
           .add({
             count,
             user: user.uid,
             timestamp: new Date(),
           })
+          .then(() => {
+            reps.value = "";
+          })
           .catch(setError)
           .finally(() => {
             setLoading(false);
           });
       }}
-      css={css`
-        font-size: 20px;
-      `}
     >
-      <label>
-        <div>reps</div>
-        <input
-          name="reps"
-          css={css`
-            font-size: 20px;
-          `}
-          type="number"
-          min="1"
-          step="1"
-        />
-      </label>
-      <button
+      <div
         css={css`
-          font-size: 20px;
+          display: flex;
         `}
-        type="submit"
-        disabled={loading}
       >
-        log
-      </button>
-      {error && (
-        <pre
-          css={css`
-            color: red;
-          `}
+        <RadiusField
+          id="log-reps"
+          label="reps"
+          name="reps"
+          type="number"
+          disabled={loading}
+          required
+          variant="outlined"
+          error={!!error}
+          inputProps={{
+            min: "1",
+            step: "1",
+          }}
+        />
+        <RadiusButton
+          type="submit"
+          variant="contained"
+          color="primary"
+          disableElevation
+          disabled={loading}
         >
-          {JSON.stringify(error, null, 2)}
-        </pre>
+          log
+        </RadiusButton>
+      </div>
+      {errorMessage && (
+        <Typography
+          variant="caption"
+          color="error"
+          display="block"
+          align="center"
+        >
+          {errorMessage}
+        </Typography>
       )}
     </form>
   );

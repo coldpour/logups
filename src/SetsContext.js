@@ -1,26 +1,26 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { db } from "./firebase";
-import UserContext from "./UserContext";
+import { useUser } from "./UserContext";
 import createUseSelector from "./createUseSelector";
 import { formatAsId, formatDayOfWeekMonthDay } from "./date";
-import { month } from "./date.js";
+import { firstDayOfMonth, month } from "./date.js";
 
 const SetsContext = createContext();
 
 export const useSelector = createUseSelector(SetsContext);
 export const selectSets = ({ sets }) => sets;
 
-export default SetsContext;
-
 export const SetsProvider = (props) => {
   const [sets, setSets] = useState(null);
-  const { user } = useContext(UserContext);
+  const { uid } = useUser();
+  const now = new Date();
+  const firstDay = firstDayOfMonth(now);
 
   useEffect(() => {
     db.collection("reps")
-      .where("user", "==", user.uid)
+      .where("user", "==", uid)
+      .where("timestamp", ">", firstDay)
       .orderBy("timestamp", "desc")
-      .limit(50)
       .onSnapshot((snapshot) => {
         if (!snapshot.size) setSets(null);
         else {
@@ -32,7 +32,7 @@ export const SetsProvider = (props) => {
           );
         }
       });
-  }, [user.uid]);
+  }, [firstDay, uid]);
 
   const setsByDay =
     sets &&
@@ -55,7 +55,7 @@ export const SetsProvider = (props) => {
     sets &&
     Object.entries(sets).reduce((total, [id, { count, timestamp }]) => {
       const recordMonth = month(timestamp.toDate());
-      const currentMonth = month(new Date());
+      const currentMonth = month(now);
       return total + (recordMonth === currentMonth ? count : 0);
     }, 0);
 
@@ -66,3 +66,5 @@ export const SetsProvider = (props) => {
     />
   );
 };
+
+export const useSets = () => useContext(SetsContext);
