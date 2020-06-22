@@ -83,6 +83,7 @@ export default () => {
           type="submit"
           variant="contained"
           color="primary"
+          disableElevation
           disabled={loading}
         >
           log

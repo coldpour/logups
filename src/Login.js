@@ -86,18 +86,24 @@ export default () => {
             id="login-email"
             label="email"
             name="email"
+            variant="outlined"
             required
             error={!!error}
             helperText={error && error.message}
             fullWidth
+            css={css`
+              margin-top: 1rem;
+            `}
           />
           <Button
             variant="contained"
             color="primary"
             type="submit"
+            disableElevation
             disabled={loading}
+            size="large"
             css={css`
-              margin-top: 1em;
+              margin-top: 1rem;
             `}
           >
             send magic link
