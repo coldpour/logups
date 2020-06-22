@@ -3,7 +3,7 @@ import { db } from "./firebase";
 import { useUser } from "./UserContext";
 import createUseSelector from "./createUseSelector";
 import { formatAsId, formatDayOfWeekMonthDay } from "./date";
-import { month } from "./date.js";
+import { firstDayOfMonth, month } from "./date.js";
 
 const SetsContext = createContext();
 
@@ -13,12 +13,14 @@ export const selectSets = ({ sets }) => sets;
 export const SetsProvider = (props) => {
   const [sets, setSets] = useState(null);
   const { uid } = useUser();
+  const now = new Date();
+  const firstDay = firstDayOfMonth(now);
 
   useEffect(() => {
     db.collection("reps")
       .where("user", "==", uid)
+      .where("timestamp", ">", firstDay)
       .orderBy("timestamp", "desc")
-      .limit(50)
       .onSnapshot((snapshot) => {
         if (!snapshot.size) setSets(null);
         else {
@@ -30,7 +32,7 @@ export const SetsProvider = (props) => {
           );
         }
       });
-  }, [uid]);
+  }, [firstDay, uid]);
 
   const setsByDay =
     sets &&
@@ -53,7 +55,7 @@ export const SetsProvider = (props) => {
     sets &&
     Object.entries(sets).reduce((total, [id, { count, timestamp }]) => {
       const recordMonth = month(timestamp.toDate());
-      const currentMonth = month(new Date());
+      const currentMonth = month(now);
       return total + (recordMonth === currentMonth ? count : 0);
     }, 0);
 
