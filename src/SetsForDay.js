@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
+import { Typography } from "@material-ui/core";
 import { useSets } from "./SetsContext";
 import { getDay } from "./location";
 import Set from "./Set";
@@ -24,9 +25,14 @@ export default () => {
         align-items: center;
       `}
     >
-      <h1>
+      <Typography
+        variant="h1"
+        css={css`
+          font-size: 3rem;
+        `}
+      >
         {displayDate} - {total}
-      </h1>
+      </Typography>
       <UL>
         {todaysSets.sort(byTimestamp).map(({ id }) => (
           <Set key={id} id={id} />
