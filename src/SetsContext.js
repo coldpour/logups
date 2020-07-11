@@ -13,13 +13,11 @@ export const selectSets = ({ sets }) => sets;
 export const SetsProvider = (props) => {
   const [sets, setSets] = useState(null);
   const { uid } = useUser();
-  const now = new Date();
-  const firstDay = firstDayOfMonth(now);
 
   useEffect(() => {
     db.collection("reps")
       .where("user", "==", uid)
-      .where("timestamp", ">", firstDay)
+      .where("timestamp", ">", firstDayOfMonth(new Date()))
       .orderBy("timestamp", "desc")
       .onSnapshot((snapshot) => {
         if (!snapshot.size) setSets(null);
@@ -32,7 +30,7 @@ export const SetsProvider = (props) => {
           );
         }
       });
-  }, [firstDay, uid]);
+  }, [uid]);
 
   const setsByDay =
     sets &&
@@ -55,7 +53,7 @@ export const SetsProvider = (props) => {
     sets &&
     Object.entries(sets).reduce((total, [id, { count, timestamp }]) => {
       const recordMonth = month(timestamp.toDate());
-      const currentMonth = month(now);
+      const currentMonth = month(new Date());
       return total + (recordMonth === currentMonth ? count : 0);
     }, 0);
 
