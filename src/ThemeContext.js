@@ -9,6 +9,9 @@ export default ({ children }) => {
   const theme = React.useMemo(
     () =>
       createMuiTheme({
+        typography: {
+          fontSize: 18,
+        },
         palette: {
           type: prefersDarkMode ? "dark" : "light",
         },
