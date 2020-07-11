@@ -40,6 +40,8 @@ const AuthProvider = (props) => {
           })
           .catch(setError)
           .finally(() => setLoading(false));
+      } else {
+        setLoading(false);
       }
     });
   }, []);
