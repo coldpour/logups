@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { css, jsx } from "@emotion/core";
-import Logo from "./Logo";
 import DailyTotals from "./DailyTotals";
 import RepForm from "./RepForm";
 import { SetsProvider } from "./SetsContext";
@@ -25,7 +24,6 @@ export default () => {
           `}
         >
           <Aggregations />
-          <Logo />
           <RepForm />
           <DailyTotals />
         </header>
