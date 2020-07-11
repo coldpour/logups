@@ -14,11 +14,10 @@ const actionCodeSettings = {
 
 const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
     firebase.auth().onAuthStateChanged((fbUser) => {
       if (fbUser) {
         setUser(fbUser);
