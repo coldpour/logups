@@ -26,7 +26,7 @@ const AuthProvider = (props) => {
         let emailForSignIn = window.localStorage.getItem("emailForSignIn");
         if (!emailForSignIn) {
           emailForSignIn = window.prompt(
-            "Please provide your email for confirmation"
+            "Please provide your email for confirmation",
           );
         }
         firebase

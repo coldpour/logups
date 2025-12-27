@@ -50,7 +50,7 @@ let testEnv;
 beforeAll(async () => {
   const rulesContent = fs.readFileSync(
     path.resolve(__dirname, "firestore.rules"),
-    "utf8"
+    "utf8",
   );
 
   testEnv = await initializeTestEnvironment({
@@ -86,7 +86,7 @@ describe("when not logged in", () => {
 
   test("cannot update bob's existing reps", async () => {
     await assertFails(
-      unauthenticatedReps().doc(bobsFirstReps).set(validAliceReps)
+      unauthenticatedReps().doc(bobsFirstReps).set(validAliceReps),
     );
   });
 

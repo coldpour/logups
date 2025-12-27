@@ -13,9 +13,11 @@ const byTimestamp = ({ timestamp: a }, { timestamp: b }) =>
 export default () => {
   const { setsByDay } = useSets();
   const today = getDay();
-  const { sets: todaysSets, total, displayDate } = setsByDay
-    ? setsByDay[today]
-    : {};
+  const {
+    sets: todaysSets,
+    total,
+    displayDate,
+  } = setsByDay ? setsByDay[today] : {};
 
   return todaysSets ? (
     <div
