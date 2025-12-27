@@ -6,9 +6,6 @@
   CI = "true"
 
 [[plugins]]
-  package = "/plugins/netlify-plugin-prettier"
-
-[[plugins]]
   package = "/plugins/netlify-plugin-firebase-cache"
 
 [[plugins]]
