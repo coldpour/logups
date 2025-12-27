@@ -1,6 +1,6 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import { Typography } from "@material-ui/core";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { Typography } from "@mui/material";
 import { useSets } from "./SetsContext";
 import { getDay } from "./location";
 import Set from "./Set";

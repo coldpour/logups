@@ -1,5 +1,5 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import { useState } from "react";
 import {
   Button,
@@ -7,8 +7,8 @@ import {
   IconButton as MIconButton,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { Delete, Check, Close } from "@material-ui/icons";
+} from "@mui/material";
+import { Delete, Check, Close } from "@mui/icons-material";
 import { db } from "./firebase";
 import { useSets } from "./SetsContext";
 import Container from "./Container";

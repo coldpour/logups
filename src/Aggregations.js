@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import { Typography } from "@material-ui/core";
+/** @jsxImportSource @emotion/react */
+import { Typography } from "@mui/material";
 import { useSets } from "./SetsContext";
 import { monthWord, day, daysInMonth } from "./date";
 import UL from "./UL";

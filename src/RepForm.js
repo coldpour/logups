@@ -1,22 +1,9 @@
-/** @jsx jsx */
-import { jsx, css } from "@emotion/core";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import { useState } from "react";
-import { Button, TextField, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button, TextField, Typography } from "@mui/material";
 import { db } from "./firebase";
 import { useUser } from "./UserContext";
-
-const useStylesRadiusField = makeStyles(() => ({
-  root: {
-    "border-top-right-radius": 0,
-    "border-bottom-right-radius": 0,
-  },
-}));
-
-const RadiusField = ({ InputProps, ...rest }) => {
-  const classes = useStylesRadiusField();
-  return <TextField InputProps={{ classes, ...InputProps }} {...rest} />;
-};
 
 const RadiusButton = (props) => (
   <Button
@@ -65,7 +52,7 @@ export default () => {
           display: flex;
         `}
       >
-        <RadiusField
+        <TextField
           id="log-reps"
           label="reps"
           name="reps"
@@ -74,6 +61,12 @@ export default () => {
           required
           variant="outlined"
           error={!!error}
+          css={css`
+            .MuiOutlinedInput-root {
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+            }
+          `}
           inputProps={{
             min: "1",
             step: "1",

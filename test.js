@@ -1,6 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const firebase = require("@firebase/testing");
+const {
+  initializeTestEnvironment,
+  assertFails,
+  assertSucceeds,
+} = require("@firebase/rules-unit-testing");
 
 const projectId = "coldpour-test-project";
 
@@ -41,113 +45,97 @@ const validBobReps = {
 const bobsFirstReps = "bobsFirst";
 const alicesFirstReps = "alicesFirst";
 
+let testEnv;
+
 beforeAll(async () => {
   const rulesContent = fs.readFileSync(
     path.resolve(__dirname, "firestore.rules"),
     "utf8"
   );
-  await firebase.loadFirestoreRules({
+
+  testEnv = await initializeTestEnvironment({
     projectId,
-    rules: rulesContent,
+    firestore: { rules: rulesContent },
   });
-  const adminReps = firebase
-    .initializeAdminApp({
-      projectId,
-    })
-    .firestore()
-    .collection("reps");
-  await adminReps.doc(bobsFirstReps).set(validBobReps);
-  await adminReps.doc(alicesFirstReps).set(validAliceReps);
+
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    const adminReps = context.firestore().collection("reps");
+    await adminReps.doc(bobsFirstReps).set(validBobReps);
+    await adminReps.doc(alicesFirstReps).set(validAliceReps);
+  });
 });
 
-afterAll(() => {
-  firebase.apps().forEach((app) => app.delete());
+afterAll(async () => {
+  await testEnv.cleanup();
 });
+
+const unauthenticatedReps = () =>
+  testEnv.unauthenticatedContext().firestore().collection("reps");
+
+const repsForUser = (user) =>
+  testEnv.authenticatedContext(user.uid, user).firestore().collection("reps");
 
 describe("when not logged in", () => {
-  const unauthedReps = firebase
-    .initializeTestApp({
-      projectId,
-    })
-    .firestore()
-    .collection("reps");
-
   test("cannot create reps", async () => {
-    await firebase.assertFails(unauthedReps.add(validAliceReps));
+    await assertFails(unauthenticatedReps().add(validAliceReps));
   });
 
   test("cannot read bob's existing reps", async () => {
-    await firebase.assertFails(unauthedReps.doc(bobsFirstReps).get());
+    await assertFails(unauthenticatedReps().doc(bobsFirstReps).get());
   });
 
   test("cannot update bob's existing reps", async () => {
-    await firebase.assertFails(
-      unauthedReps.doc(bobsFirstReps).set(validAliceReps)
+    await assertFails(
+      unauthenticatedReps().doc(bobsFirstReps).set(validAliceReps)
     );
   });
 
   test("cannot delete bob's existing reps", async () => {
-    await firebase.assertFails(unauthedReps.doc(bobsFirstReps).delete());
+    await assertFails(unauthenticatedReps().doc(bobsFirstReps).delete());
   });
 });
 
 describe("when logged in as bob", () => {
-  const bobReps = firebase
-    .initializeTestApp({
-      projectId,
-      auth: bob,
-    })
-    .firestore()
-    .collection("reps");
+  const bobReps = repsForUser(bob);
 
   test("bob can read his existing reps", async () => {
-    await firebase.assertSucceeds(bobReps.doc(bobsFirstReps).get());
+    await assertSucceeds(bobReps.doc(bobsFirstReps).get());
   });
 });
 
 describe("when logged in as alice", () => {
-  const aLiceDb = firebase
-    .initializeTestApp({
-      projectId,
-      auth: alice,
-    })
-    .firestore();
-  const aliceReps = aLiceDb.collection("reps");
+  const aliceDb = repsForUser(alice);
 
   test("alice can CRUD reps for herself", async () => {
-    await firebase.assertSucceeds(aliceReps.add(validAliceReps));
-    const snapshot = await aliceReps.where("user", "==", alice.uid).get();
+    await assertSucceeds(aliceDb.add(validAliceReps));
+    const snapshot = await aliceDb.where("user", "==", alice.uid).get();
     const { docs } = snapshot;
     expect(docs.length).toBeGreaterThan(0);
     const [first] = docs;
     const { id } = first;
     const { count } = first.data();
     const newCount = count * 2;
-    await firebase.assertSucceeds(
-      aliceReps.doc(id).update({ count: newCount })
-    );
-    const updatedDoc = await aliceReps.doc(id).get();
+    await assertSucceeds(aliceDb.doc(id).update({ count: newCount }));
+    const updatedDoc = await aliceDb.doc(id).get();
     expect(updatedDoc.data().count).toEqual(newCount);
-    await firebase.assertSucceeds(aliceReps.doc(id).delete());
+    await assertSucceeds(aliceDb.doc(id).delete());
   });
 
   describe("alice cannot CRUD for bob", () => {
     test("create", async () => {
-      await firebase.assertFails(aliceReps.add(validBobReps));
+      await assertFails(aliceDb.add(validBobReps));
     });
 
     test("read", async () => {
-      await firebase.assertFails(aliceReps.doc(bobsFirstReps).get());
+      await assertFails(aliceDb.doc(bobsFirstReps).get());
     });
 
     test("update", async () => {
-      await firebase.assertFails(
-        aliceReps.doc(bobsFirstReps).set(validBobReps)
-      );
+      await assertFails(aliceDb.doc(bobsFirstReps).set(validBobReps));
     });
 
     test("delete", async () => {
-      await firebase.assertFails(aliceReps.doc(bobsFirstReps).delete());
+      await assertFails(aliceDb.doc(bobsFirstReps).delete());
     });
   });
 
@@ -155,7 +143,7 @@ describe("when logged in as alice", () => {
     badData.forEach(([desc, argFn]) => {
       const arg = argFn(validAliceReps);
       test(`${desc}: ${JSON.stringify(arg)}`, async () =>
-        await firebase.assertFails(aliceReps.add(arg)));
+        await assertFails(aliceDb.add(arg)));
     });
   });
 
@@ -163,7 +151,7 @@ describe("when logged in as alice", () => {
     badData.forEach(([desc, argFn]) => {
       const arg = argFn(validAliceReps);
       test(`${desc}: ${JSON.stringify(arg)}`, async () =>
-        await firebase.assertFails(aliceReps.doc(alicesFirstReps).set(arg)));
+        await assertFails(aliceDb.doc(alicesFirstReps).set(arg)));
     });
   });
 });

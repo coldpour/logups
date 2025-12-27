@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
 import { useUser } from "./UserContext";
 import Login from "./Login";
 import Authed from "./Authed";

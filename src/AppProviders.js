@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
 import { AuthProvider } from "./AuthContext";
 import { UserProvider } from "./UserContext";
 import ThemeProvider from "./ThemeContext";

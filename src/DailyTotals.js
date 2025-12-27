@@ -1,6 +1,6 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import { Button, Typography } from "@material-ui/core";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { Button, Typography } from "@mui/material";
 import { filterByDay } from "./location";
 import { useSets } from "./SetsContext";
 import { desc } from "./sort";
