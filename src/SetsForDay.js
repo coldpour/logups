@@ -1,6 +1,6 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import { Typography } from "@material-ui/core";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { Typography } from "@mui/material";
 import { useSets } from "./SetsContext";
 import { getDay } from "./location";
 import Set from "./Set";
@@ -10,12 +10,14 @@ import UL from "./UL";
 const byTimestamp = ({ timestamp: a }, { timestamp: b }) =>
   asc(a.toDate(), b.toDate());
 
-export default () => {
+const SetsForDay = () => {
   const { setsByDay } = useSets();
   const today = getDay();
-  const { sets: todaysSets, total, displayDate } = setsByDay
-    ? setsByDay[today]
-    : {};
+  const {
+    sets: todaysSets,
+    total,
+    displayDate,
+  } = setsByDay ? setsByDay[today] : {};
 
   return todaysSets ? (
     <div
@@ -42,3 +44,5 @@ export default () => {
     </div>
   ) : null;
 };
+
+export default SetsForDay;

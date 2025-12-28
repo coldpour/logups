@@ -1,22 +1,22 @@
 import React from "react";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
-export default ({ children }) => {
+const ThemeContext = ({ children }) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const theme = React.useMemo(
     () =>
-      createMuiTheme({
+      createTheme({
         typography: {
           fontSize: 18,
         },
         palette: {
-          type: prefersDarkMode ? "dark" : "light",
+          mode: prefersDarkMode ? "dark" : "light",
         },
       }),
-    [prefersDarkMode]
+    [prefersDarkMode],
   );
 
   return (
@@ -26,3 +26,5 @@ export default ({ children }) => {
     </ThemeProvider>
   );
 };
+
+export default ThemeContext;

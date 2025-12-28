@@ -1,6 +1,5 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import { Typography } from "@material-ui/core";
+/** @jsxImportSource @emotion/react */
+import { Typography } from "@mui/material";
 import { useSets } from "./SetsContext";
 import { monthWord, day, daysInMonth } from "./date";
 import UL from "./UL";
@@ -16,7 +15,7 @@ const LI = ({ children, ...rest }) => (
 const Label = (props) => <Typography {...props} />;
 const Value = (props) => <Typography {...props} />;
 
-export default () => {
+const Aggregations = () => {
   const { runningTotal } = useSets();
   const today = new Date();
   const currentMonth = monthWord(today);
@@ -39,3 +38,5 @@ export default () => {
     </UL>
   );
 };
+
+export default Aggregations;

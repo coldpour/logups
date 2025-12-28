@@ -1,11 +1,11 @@
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import { useState } from "react";
-import { css, jsx } from "@emotion/core";
-import { Button, TextField, Typography } from "@material-ui/core";
-import { EmailOutlined } from "@material-ui/icons";
+import { css } from "@emotion/react";
+import { Button, TextField, Typography } from "@mui/material";
+import { EmailOutlined } from "@mui/icons-material";
 import { useAuth } from "./AuthContext";
 
-export default () => {
+const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState("");
@@ -113,3 +113,5 @@ export default () => {
     </div>
   );
 };
+
+export default Login;

@@ -1,5 +1,5 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import DailyTotals from "./DailyTotals";
 import RepForm from "./RepForm";
 import { SetsProvider } from "./SetsContext";
@@ -7,7 +7,7 @@ import SetsForDay from "./SetsForDay";
 import Aggregations from "./Aggregations";
 import { hasDay } from "./location";
 
-export default () => {
+const Authed = () => {
   return (
     <SetsProvider>
       {hasDay() ? (
@@ -31,3 +31,5 @@ export default () => {
     </SetsProvider>
   );
 };
+
+export default Authed;

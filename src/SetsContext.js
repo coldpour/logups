@@ -25,8 +25,8 @@ export const SetsProvider = (props) => {
           setSets(
             snapshot.docs.reduce(
               (next, doc) => ({ ...next, [doc.id]: doc.data() }),
-              {}
-            )
+              {},
+            ),
           );
         }
       });
