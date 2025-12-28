@@ -46,7 +46,7 @@ const Timestamp = ({ value }) => (
   </Typography>
 );
 
-export default ({ id }) => {
+const Set = ({ id }) => {
   const { sets } = useSets();
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -134,3 +134,5 @@ export default ({ id }) => {
     </LI>
   );
 };
+
+export default Set;

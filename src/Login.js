@@ -5,7 +5,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import { EmailOutlined } from "@mui/icons-material";
 import { useAuth } from "./AuthContext";
 
-export default () => {
+const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState("");
@@ -113,3 +113,5 @@ export default () => {
     </div>
   );
 };
+
+export default Login;

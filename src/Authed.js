@@ -7,7 +7,7 @@ import SetsForDay from "./SetsForDay";
 import Aggregations from "./Aggregations";
 import { hasDay } from "./location";
 
-export default () => {
+const Authed = () => {
   return (
     <SetsProvider>
       {hasDay() ? (
@@ -31,3 +31,5 @@ export default () => {
     </SetsProvider>
   );
 };
+
+export default Authed;

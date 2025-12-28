@@ -10,7 +10,7 @@ import UL from "./UL";
 const byTimestamp = ({ timestamp: a }, { timestamp: b }) =>
   asc(a.toDate(), b.toDate());
 
-export default () => {
+const SetsForDay = () => {
   const { setsByDay } = useSets();
   const today = getDay();
   const {
@@ -44,3 +44,5 @@ export default () => {
     </div>
   ) : null;
 };
+
+export default SetsForDay;

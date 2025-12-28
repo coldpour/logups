@@ -10,7 +10,7 @@ import Container from "./Container";
 
 const byKey = ([a], [b]) => desc(a, b);
 
-export default () => {
+const DailyTotals = () => {
   const { setsByDay } = useSets();
 
   return (
@@ -36,3 +36,5 @@ export default () => {
     )
   );
 };
+
+export default DailyTotals;

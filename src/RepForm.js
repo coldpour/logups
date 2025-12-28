@@ -15,7 +15,7 @@ const RadiusButton = (props) => (
   />
 );
 
-export default () => {
+const RepForm = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const user = useUser();
@@ -95,3 +95,5 @@ export default () => {
     </form>
   );
 };
+
+export default RepForm;

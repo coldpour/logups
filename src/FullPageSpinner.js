@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import spinner from "./spinner.svg";
 
-export default () => (
+const FullPageSpinner = () => (
   <div
     css={css`
       display: flex;
@@ -33,3 +33,5 @@ export default () => (
     />
   </div>
 );
+
+export default FullPageSpinner;

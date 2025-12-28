@@ -2,10 +2,12 @@ import { AuthProvider } from "./AuthContext";
 import { UserProvider } from "./UserContext";
 import ThemeProvider from "./ThemeContext";
 
-export default ({ children }) => (
+const AppProviders = ({ children }) => (
   <ThemeProvider>
     <AuthProvider>
       <UserProvider>{children}</UserProvider>
     </AuthProvider>
   </ThemeProvider>
 );
+
+export default AppProviders;

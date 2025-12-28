@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 
-export default (props) => (
+const UL = (props) => (
   <ul
     css={css`
       padding-left: 0;
@@ -10,3 +10,5 @@ export default (props) => (
     {...props}
   />
 );
+
+export default UL;

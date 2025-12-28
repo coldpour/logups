@@ -15,7 +15,7 @@ const LI = ({ children, ...rest }) => (
 const Label = (props) => <Typography {...props} />;
 const Value = (props) => <Typography {...props} />;
 
-export default () => {
+const Aggregations = () => {
   const { runningTotal } = useSets();
   const today = new Date();
   const currentMonth = monthWord(today);
@@ -38,3 +38,5 @@ export default () => {
     </UL>
   );
 };
+
+export default Aggregations;
