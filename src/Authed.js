@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { Show, UserButton } from "@clerk/react";
 import DailyTotals from "./DailyTotals";
 import RepForm from "./RepForm";
 import { SetsProvider } from "./SetsContext";
@@ -10,6 +11,18 @@ import { hasDay } from "./location";
 const Authed = () => {
   return (
     <SetsProvider>
+      <Show when="signed-in">
+        <div
+          css={css`
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1;
+          `}
+        >
+          <UserButton />
+        </div>
+      </Show>
       {hasDay() ? (
         <SetsForDay />
       ) : (

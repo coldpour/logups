@@ -1,66 +1,130 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useAuth as useClerkAuth, useUser as useClerkUser } from "@clerk/react";
 import firebase from "./firebase";
 import FullPageSpinner from "./FullPageSpinner";
 
 const AuthContext = createContext();
 
-const actionCodeSettings = {
-  // URL you want to redirect back to. The domain (www.example.com) for this
-  // URL must be whitelisted in the Firebase Console.
-  url: window.location.href,
-  // This must be true.
-  handleCodeInApp: true,
-};
+const getFirebaseTokenEndpoint = () =>
+  import.meta.env.VITE_FIREBASE_CUSTOM_TOKEN_URL ||
+  "https://us-central1-logups-dbc17.cloudfunctions.net/firebaseCustomToken";
 
-const AuthProvider = (props) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+const AuthProvider = ({ children }) => {
+  const { isLoaded, isSignedIn, getToken } = useClerkAuth();
+  const { user: clerkUser } = useClerkUser();
+  const [firebaseUser, setFirebaseUser] = useState(firebase.auth().currentUser);
+  const [bridging, setBridging] = useState(false);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+
+  useEffect(() => firebase.auth().onAuthStateChanged(setFirebaseUser), []);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((fbUser) => {
-      if (fbUser) {
-        setUser(fbUser);
-        setLoading(false);
-      } else if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-        let emailForSignIn = window.localStorage.getItem("emailForSignIn");
-        if (!emailForSignIn) {
-          emailForSignIn = window.prompt(
-            "Please provide your email for confirmation",
+    if (!isLoaded) {
+      return undefined;
+    }
+
+    let isCurrent = true;
+
+    const syncFirebaseSession = async () => {
+      if (!isSignedIn || !clerkUser) {
+        setError(null);
+
+        if (firebase.auth().currentUser) {
+          setBridging(true);
+
+          try {
+            await firebase.auth().signOut();
+          } finally {
+            if (isCurrent) {
+              setBridging(false);
+            }
+          }
+        }
+
+        return;
+      }
+
+      if (firebase.auth().currentUser?.uid === clerkUser.id) {
+        setError(null);
+        return;
+      }
+
+      setBridging(true);
+
+      try {
+        const clerkSessionToken = await getToken();
+
+        if (!clerkSessionToken) {
+          throw new Error("Clerk session token is unavailable.");
+        }
+
+        const response = await fetch(getFirebaseTokenEndpoint(), {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${clerkSessionToken}`,
+          },
+        });
+        const payload = await response.json().catch(() => ({}));
+
+        if (!response.ok || !payload.firebaseToken) {
+          throw new Error(
+            payload.error || "Unable to exchange Clerk session for Firebase auth.",
           );
         }
-        firebase
-          .auth()
-          .signInWithEmailLink(emailForSignIn, window.location.href)
-          .then((result) => {
-            window.localStorage.removeItem("emailForSignIn");
-            const { user } = result;
-            setUser(user);
-          })
-          .catch(setError)
-          .finally(() => setLoading(false));
-      } else {
-        setLoading(false);
+
+        await firebase.auth().signInWithCustomToken(payload.firebaseToken);
+
+        if (isCurrent) {
+          setError(null);
+        }
+      } catch (nextError) {
+        if (isCurrent) {
+          setError(nextError);
+        }
+      } finally {
+        if (isCurrent) {
+          setBridging(false);
+        }
       }
-    });
-  }, []);
+    };
 
-  if (error) {
-    return <pre>{JSON.stringify(error, null, 2)}</pre>;
-  }
-  if (loading) {
-    return <FullPageSpinner />;
-  }
+    syncFirebaseSession();
 
-  const login = (email) =>
-    firebase
-      .auth()
-      .sendSignInLinkToEmail(email, actionCodeSettings)
-      .then(() => {
-        window.localStorage.setItem("emailForSignIn", email);
-      });
+    return () => {
+      isCurrent = false;
+    };
+  }, [clerkUser, getToken, isLoaded, isSignedIn, retryCount]);
 
-  return <AuthContext.Provider value={{ user, login }} {...props} />;
+  const user =
+    isSignedIn && clerkUser && firebaseUser?.uid === clerkUser.id
+      ? {
+          uid: clerkUser.id,
+          email: clerkUser.primaryEmailAddress?.emailAddress || null,
+          displayName:
+            clerkUser.fullName ||
+            clerkUser.username ||
+            clerkUser.primaryEmailAddress?.emailAddress ||
+            "User",
+          clerkUser,
+        }
+      : null;
+
+  const loading =
+    !isLoaded ||
+    bridging ||
+    (isSignedIn && !!clerkUser && firebaseUser?.uid !== clerkUser.id && !error);
+
+  const retrySync = () => {
+    setError(null);
+    setRetryCount((count) => count + 1);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, error, retrySync }}>
+      {loading ? <FullPageSpinner /> : children}
+    </AuthContext.Provider>
+  );
 };
 
 const useAuth = () => useContext(AuthContext);

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@clerk/react": "^6.1.0",
+    "@clerk/shared": "^4.3.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.4",
@@ -14,17 +16,18 @@
     "netlify-plugin-firebase-cache": "^0.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
     "source-map-explorer": "^2.5.3"
   },
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "analyze": "source-map-explorer 'dist/assets/*.js'",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "npm run test:web && npm run test:rules",
-    "test:web": "react-scripts test",
+    "test:web": "vitest run",
     "test:rules": "firebase emulators:exec --only firestore 'jest ./test'",
-    "eject": "react-scripts eject",
+    "deploy:functions": "firebase deploy --only functions",
     "emulate": "firebase emulators:start --only firestore"
   },
   "eslintConfig": {
@@ -45,7 +48,12 @@
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
     "@firebase/rules-unit-testing": "^5.0.0",
+    "@vitejs/plugin-react": "^5.1.0",
     "firebase-tools": "^15.1.0",
-    "prettier": "^3.7.4"
+    "jest": "^30.2.0",
+    "jsdom": "^27.0.1",
+    "prettier": "^3.7.4",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4"
   }
 }

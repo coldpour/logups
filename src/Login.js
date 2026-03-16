@@ -1,16 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from "react";
 import { css } from "@emotion/react";
-import { Button, TextField, Typography } from "@mui/material";
-import { EmailOutlined } from "@mui/icons-material";
-import { useAuth } from "./AuthContext";
+import { Button, Typography } from "@mui/material";
+import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/react";
 
 const Login = () => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState("");
-  const { login } = useAuth();
-
   return (
     <div
       css={css`
@@ -25,91 +18,58 @@ const Login = () => {
       `}
     >
       <Typography variant="h1">LogUps</Typography>
-      {sent ? (
+      <Typography
+        css={css`
+          padding: 0 2em;
+          text-align: center;
+          margin-top: 1rem;
+        `}
+      >
+        Sign in with Clerk to keep your reps synced across production and local
+        development.
+      </Typography>
+      <Show when="signed-out">
         <div
-          css={css`
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          `}
-        >
-          <EmailOutlined
-            css={css`
-              font-size: 100px;
-              margin: 0.25em;
-            `}
-          />
-          <Typography
-            css={css`
-              padding: 0 2em;
-            `}
-          >
-            We sent an email to you at{" "}
-            <Typography color="textSecondary" component="span">
-              {sent}
-            </Typography>
-            . It has a magic link that'll sign you in.
-          </Typography>
-        </div>
-      ) : (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            setLoading(true);
-            const { target } = e;
-            const field = target.elements.email;
-            const email = field.value;
-
-            login(email)
-              .then(() => {
-                field.value = "";
-                setSent(email);
-              })
-              .catch(setError)
-              .finally(() => setLoading(false));
-          }}
           css={css`
             width: 100%;
             padding: 1em;
             text-align: center;
           `}
         >
-          <Typography
+          <div
             css={css`
-              padding: 0 2em;
-            `}
-          >
-            Get a magic link sent to your email that will sign you in instantly!
-          </Typography>
-          <TextField
-            id="login-email"
-            label="email"
-            name="email"
-            variant="outlined"
-            required
-            error={!!error}
-            helperText={error && error.message}
-            fullWidth
-            css={css`
-              margin-top: 1rem;
-            `}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            disableElevation
-            disabled={loading}
-            size="large"
-            css={css`
+              display: grid;
+              gap: 1rem;
               margin-top: 1rem;
             `}
           >
-            send magic link
-          </Button>
-        </form>
-      )}
+            <SignInButton mode="modal">
+              <Button variant="contained" size="large" disableElevation fullWidth>
+                sign in
+              </Button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <Button variant="outlined" size="large" fullWidth>
+                create account
+              </Button>
+            </SignUpButton>
+          </div>
+        </div>
+      </Show>
+      <Show when="signed-in">
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+          `}
+        >
+          <UserButton />
+          <Typography>Finishing your session…</Typography>
+        </div>
+      </Show>
     </div>
   );
 };
